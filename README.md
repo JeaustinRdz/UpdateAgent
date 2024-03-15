@@ -11,3 +11,6 @@ Steps to implement the pipeline
 4: Change the Org and PoolID in the yml
 
 How to schedule a pipeline https://learn.microsoft.com/en-us/azure/devops/pipelines/process/scheduled-triggers?view=azure-devops&tabs=yaml
+
+
+Api documentation: https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=yaml%2Cbrowser#how-can-i-trigger-agent-updates-programmatically-for-specific-agent-pool
