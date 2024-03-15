@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- task: PowerShell@2
+  env:
+    ADO_PAT: $(ADO_PAT)
+  inputs:
+    targetType: 'inline'
+    script: |
+      function triggerPipeline($PAT, $DevOpsOrg) {
+      $api_ver = "6.0"
+      $url = "https://dev.azure.com/$DevOpsOrg/_apis/distributedtask/pools/$PoolID/messages?&api-version=$api_ver"
+      $body = ""
+      
+      # convert PAT to base64 and add to header
+      $base64PAT = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($PAT)"))
+      
+      # create header
+      $headers = @{Authorization = "Basic $base64PAT"}
+      
+      # trigger build with json body
+      $response = Invoke-RestMethod -Uri $url -Method Post -Body $body -Headers $headers -ContentType "application/json"
+      
+      # return the response
+      return $response
+      }
+
+      $pat = ${env:ADO_PAT}
+      $org = "v-jeaustinro"
+      $PoolID = "1"
+      echo $pat
+      $result = triggerPipeline -PAT $pat -DevOpsOrg $org -PoolID $PoolID 
+      # write the response to the console
+      $result | ConvertTo-Json
